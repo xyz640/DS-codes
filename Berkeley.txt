@@ -1,0 +1,47 @@
+import java.util.*;
+
+public class BerkeleyAlgorithm {
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter number of clocks (including server): ");
+        int n = sc.nextInt();
+
+        int[] time = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            System.out.print("Enter time of clock " + i + ": ");
+            time[i] = sc.nextInt();
+        }
+
+        int serverTime = time[0];
+        int[] diff = new int[n];
+        int sumDiff = 0;
+
+        System.out.println("\n--- Differences from Server ---");
+
+        for (int i = 0; i < n; i++) {
+            diff[i] = time[i] - serverTime;
+            sumDiff += diff[i];
+            System.out.println("Clock " + i + " diff = " + diff[i]);
+        }
+
+        double avgDiff = (double) sumDiff / n;
+
+        System.out.println("\nAverage Difference = " + avgDiff);
+
+        System.out.println("\n--- Adjusted Times ---");
+
+        for (int i = 0; i < n; i++) {
+            double correction = avgDiff - diff[i];
+            double adjustedTime = time[i] + correction;
+
+            System.out.println("Clock " + i + " adjusted time = " + adjustedTime);
+        }
+
+        sc.close();
+    }
+}
+

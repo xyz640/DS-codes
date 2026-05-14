@@ -1,0 +1,76 @@
+1)	MyRemote.java
+import java.rmi.*;
+
+public interface MyRemote extends Remote {
+    String sendMessage(String msg) throws RemoteException;
+}
+
+2. MyRemoteImpl.java
+import java.rmi.*;
+import java.rmi.server.*;
+
+public class MyRemoteImpl extends UnicastRemoteObject implements MyRemote {
+
+    // Constructor
+    protected MyRemoteImpl() throws RemoteException {
+        super();
+    }
+    // Remote Method
+    public String sendMessage(String msg) throws RemoteException {
+
+        // Print client message on server
+        System.out.println("Client says: " + msg);
+
+        // Multi-thread simulation
+        Thread t = new Thread(() -> {
+            System.out.println("Handled by Thread: " + Thread.currentThread().getName());
+        });
+        t.start();
+
+        return "Message received by server!";
+    }
+}
+
+3. Server.java
+import java.rmi.*;
+import java.rmi.registry.*;
+
+public class Server {
+    public static void main(String[] args) {
+        try {
+            // Create remote object
+            MyRemoteImpl obj = new MyRemoteImpl();
+
+            // Create registry (NO need to run rmiregistry manually)
+            LocateRegistry.createRegistry(1099);
+
+            // Bind object
+            Naming.rebind("rmi://localhost/MyService", obj);
+
+            System.out.println("RMI Server is running...");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+4. Client.java	
+import java.rmi.*;
+
+public class Client {
+    public static void main(String[] args) {
+        try {
+            // Lookup remote object
+            MyRemote obj = (MyRemote) Naming.lookup("rmi://localhost/MyService");
+
+            // Call remote method
+            String response = obj.sendMessage("Hello from Client!");
+
+            // Print response
+            System.out.println("Server says: " + response);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}

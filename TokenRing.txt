@@ -1,0 +1,35 @@
+import java.util.*;
+
+public class TokenRing {
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter number of processes: ");
+        int n = sc.nextInt();
+
+        System.out.print("Enter process holding initial token: ");
+        int token = sc.nextInt();
+
+        System.out.print("Enter process requesting Critical Section: ");
+        int request = sc.nextInt();
+
+        System.out.println("\n--- Token Ring Simulation ---");
+
+        int current = token;
+
+        // circulate token
+        while (current != request) {
+            System.out.println("Token passed from P" + current +
+                    " to P" + ((current + 1) % n));
+            current = (current + 1) % n;
+        }
+
+        System.out.println("\nP" + request + " enters Critical Section");
+        System.out.println("P" + request + " exits Critical Section");
+
+        System.out.println("Token passed to P" + ((request + 1) % n));
+
+        sc.close();
+    }
+}

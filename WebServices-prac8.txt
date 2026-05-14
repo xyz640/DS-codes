@@ -1,0 +1,59 @@
+//Client.java
+import java.io.*;
+import java.net.*;
+public class Client {
+    public static void main(String[] args) {
+        try {
+            Socket socket = new Socket("localhost", 5000);
+            DataOutputStream output =
+                    new DataOutputStream(socket.getOutputStream());
+            DataInputStream input =
+                    new DataInputStream(socket.getInputStream());
+            int a = 10;
+            int b = 20;
+            output.writeInt(a);
+            output.writeInt(b);
+            int result = input.readInt();
+            System.out.println("Addition Result = " + result);
+            input.close();
+            output.close();
+            socket.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+}
+
+//Server.java
+import java.io.*;
+import java.net.*;
+
+public class Server {
+    public static void main(String[] args) {
+        try {
+            ServerSocket serverSocket = new ServerSocket(5000);
+            System.out.println("Server Started...");
+            System.out.println("Waiting for client...");
+            Socket socket = serverSocket.accept();
+            System.out.println("Client Connected");
+            DataInputStream input =
+                    new DataInputStream(socket.getInputStream());
+            DataOutputStream output =
+                    new DataOutputStream(socket.getOutputStream());
+            int num1 = input.readInt();
+            int num2 = input.readInt();
+            int sum = num1 + num2;
+            output.writeInt(sum);
+            System.out.println("Numbers Received: "
+                    + num1 + " and " + num2);
+            System.out.println("Sum Sent: " + sum);
+            input.close();
+            output.close();
+            socket.close();
+            serverSocket.close();
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+}
